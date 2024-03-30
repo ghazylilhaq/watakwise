@@ -1,0 +1,36 @@
+import { z } from "zod";
+
+export const personalitySchema = z.object({
+  mbti: z.enum([
+    "ENTP",
+    "INTJ",
+    "INFP",
+    "ENFJ",
+    "ISTP",
+    "ISFJ",
+    "ESTP",
+    "ESFJ",
+    "ISTJ",
+    "ISFP",
+    "ESTJ",
+    "ESFP",
+    "INTP",
+    "INFJ",
+    "ENTJ",
+    "ENFP",
+  ]),
+  zodiac: z.enum([
+    "cancer",
+    "leo",
+    "virgo",
+    "libra",
+    "scorpio",
+    "sagittarius",
+    "capricorn",
+    "aquarius",
+    "pisces",
+    "aries",
+    "taurus",
+    "gemini",
+  ]),
+});
