@@ -34,7 +34,7 @@ const zodiac = [
 ] as const;
 
 export const personalitySchema = z.object({
-  mbti: z.enum(mbti),
-  zodiac: z.enum(zodiac),
+  mbti: z.enum(mbti).optional(),
+  zodiac: z.enum(zodiac).optional(),
   personality: z.array(z.union([z.enum(mbti), z.enum(zodiac)])).optional(),
 });

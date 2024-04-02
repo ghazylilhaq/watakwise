@@ -64,16 +64,18 @@ model PersonalityCategory {
 model Personality {
   id    String    @id @default(cuid())
   name      String  @unique
-  description String
+  description String?
   category  PersonalityCategory @relation(fields: [categoryTitle], references: [title])
   categoryTitle String
   Users User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
 
   }
 
 model ContentCategory {
   id    String    @id @default(cuid())
-  title     String 
+  title     String @unique
   description String
   createdAt DateTime @default(now())
   contents Content[]
@@ -83,8 +85,8 @@ model Content {
   id    String    @id @default(cuid())
   title     String
   description String
-  contentCategoryId String
-  contentCategory ContentCategory @relation(fields: [contentCategoryId], references: [id])
+  contentCategoryTitle String
+  contentCategory ContentCategory @relation(fields: [contentCategoryTitle], references: [title])
   createdAt DateTime @default(now())
   updatedAt DateTime?
   userId String
