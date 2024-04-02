@@ -1,14 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import React from "react";
-
 import SignInButton from "./SignInButton";
-import { UserButton, useUser } from "@clerk/nextjs";
-import { is } from "@xata.io/client";
+import { getAuthSession } from "@/lib/nextauth";
+import UserAccountNav from "./UserAccountNav";
 
-const Navbar = () => {
-  const { user, isLoaded } = useUser();
+const Navbar = async () => {
+  const session = await getAuthSession();
 
   return (
     <div className="fixed inset-x-0 top-0 bg-white dark:bg-gray-950 z-[10] h-fit border-b border-zinc-300  py-2 ">
@@ -20,16 +17,16 @@ const Navbar = () => {
           </p>
         </Link>
         <div className="flex items-center gap-4">
-          {isLoaded && user && (
-            <>
-              <Link
-                className="mr-2 text-l font-bold tracking-tight"
-                href="/dashboard"
-              >
-                Dasboard
-              </Link>
-              <UserButton afterSignOutUrl="/" />
-            </>
+          <Link
+            className="mr-2 text-l font-bold tracking-tight"
+            href="/dashboard"
+          >
+            Dasboard
+          </Link>
+          {session?.user ? (
+            <UserAccountNav user={session.user} />
+          ) : (
+            <SignInButton text={"Sign In"} />
           )}
         </div>
       </div>

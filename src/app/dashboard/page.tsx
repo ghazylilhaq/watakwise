@@ -1,11 +1,16 @@
 import SelectPersonality from "@/components/dashboard/SelectPersonality";
-import { exportUserData } from "@/lib/clerk";
+import { getAuthSession } from "@/lib/nextauth";
+import { auth, currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 import React from "react";
 
 type Props = {};
 
-const DashboardPage = (props: Props) => {
-  exportUserData();
+const DashboardPage = async (props: Props) => {
+  const session = await getAuthSession();
+  if (!session?.user) {
+    redirect("/");
+  }
 
   return (
     <main className="p-8 mx-auto max-w-7xl">

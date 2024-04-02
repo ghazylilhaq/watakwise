@@ -13,23 +13,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    String    @id @default(cuid())
-  email String?  @unique
-  name  String?
-  profile Profile?
-  userPersonality UserPersonality?
-  content Content[]
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
 }
 
-model Profile {
-  id    String    @id @default(cuid())
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  userId String     @unique
-  user   User    @relation(fields: [userId], references: [id])
-  bio    String?
-  image  String?
-  
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image    String?
+  accounts Account[]
+  sessions Session[]
+  contents Content[]
+  personalities Personality[]
 }
 
 model PersonalityCategory {
@@ -49,25 +67,9 @@ model Personality {
   description String
   category  PersonalityCategory @relation(fields: [categoryTitle], references: [title])
   categoryTitle String
-  personalitySelection PersonalitySelection[]
+  Users User[]
 
   }
-
-model UserPersonality {
-  id    String    @id @default(cuid())
-  userId        String    @unique
-  user          User    @relation(fields: [userId], references: [id])
-  createdAt     DateTime @default(now())
-  personalitySelection PersonalitySelection[]
-}
-
-model PersonalitySelection {
-  personalityId String
-  personality   Personality @relation(fields: [personalityId], references: [id])
-  UserPersonalityId String 
-  userPersonality UserPersonality @relation(fields: [UserPersonalityId], references: [id])
-  @@id([personalityId, UserPersonalityId])
-}
 
 model ContentCategory {
   id    String    @id @default(cuid())

@@ -24,17 +24,53 @@ import { useForm } from "react-hook-form";
 import { personalitySchema } from "@/schemas/form/personality";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import SelectionButton from "./SelectionButton";
 
 type Props = {};
 
 type Input = z.infer<typeof personalitySchema>;
 
 const SelectPersonalityForm = (props: Props) => {
+  const personalityTypes = {
+    mbti: [
+      "ENTP",
+      "INTJ",
+      "INFP",
+      "ENFJ",
+      "ISTP",
+      "ISFJ",
+      "ESTP",
+      "ESFJ",
+      "ISTJ",
+      "ISFP",
+      "ESTJ",
+      "ESFP",
+      "INTP",
+      "INFJ",
+      "ENTJ",
+      "ENFP",
+    ],
+    zodiac: [
+      "Cancer",
+      "Leo",
+      "Virgo",
+      "Libra",
+      "Scorpio",
+      "Sagittarius",
+      "Capricorn",
+      "Aquarius",
+      "Pisces",
+      "Aries",
+      "Taurus",
+      "Gemini" /* ... */,
+    ],
+  };
+
   const form = useForm<Input>({
     resolver: zodResolver(personalitySchema),
     defaultValues: {
       mbti: "ENTP",
-      zodiac: "leo",
+      zodiac: "Cancer",
     },
   });
 
@@ -55,65 +91,51 @@ const SelectPersonalityForm = (props: Props) => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormItem>
-                <FormLabel>MBTI</FormLabel>
-                <div className="justify-center items-center flex gap-4 mt-4 md:grid-cols-2">
-                  <Button
-                    size="lg"
-                    type="button"
-                    variant={
-                      form.getValues("mbti") === "ENTP"
-                        ? "default"
-                        : "secondary"
-                    }
-                    onClick={() => form.setValue("mbti", "ENTP")}
-                  >
-                    ENTP
-                  </Button>
-                  <Button
-                    size="lg"
-                    type="button"
-                    variant={
-                      form.getValues("mbti") === "INTJ"
-                        ? "default"
-                        : "secondary"
-                    }
-                    onClick={() => form.setValue("mbti", "INTJ")}
-                  >
-                    INTJ
-                  </Button>
-                </div>
+                <FormLabel className="text-xl font-bold">MBTI</FormLabel>
                 <FormDescription>Select your MBTI</FormDescription>
+                <div className="justify-center items-center flex flex-wrap gap-4 mt-4  max-w-6xl md:grid-cols-2">
+                  {personalityTypes.mbti.map((sign, index) => (
+                    <SelectionButton
+                      key={index}
+                      size="lg"
+                      type="button"
+                      variant={
+                        form.getValues("mbti") === sign
+                          ? "fixedDefault"
+                          : "fixedSecondary"
+                      }
+                      onClick={() =>
+                        form.setValue("mbti", sign as Input["mbti"])
+                      }
+                    >
+                      {sign}
+                    </SelectionButton>
+                  ))}
+                </div>
                 <FormMessage />
               </FormItem>
               <FormItem>
-                <FormLabel>Zodiac</FormLabel>
-                <div className="justify-center items-center flex gap-4 mt-4 md:grid-cols-2">
-                  <Button
-                    size="lg"
-                    type="button"
-                    variant={
-                      form.getValues("zodiac") === "leo"
-                        ? "default"
-                        : "secondary"
-                    }
-                    onClick={() => form.setValue("zodiac", "leo")}
-                  >
-                    LEO
-                  </Button>
-                  <Button
-                    size="lg"
-                    type="button"
-                    variant={
-                      form.getValues("zodiac") === "cancer"
-                        ? "default"
-                        : "secondary"
-                    }
-                    onClick={() => form.setValue("zodiac", "cancer")}
-                  >
-                    CANCER
-                  </Button>
-                </div>
+                <FormLabel className="text-xl font-bold">Zodiac</FormLabel>
                 <FormDescription>Select your Zodiac</FormDescription>
+                <div className="justify-center items-center flex flex-wrap gap-4 mt-4  max-w-6xl md:grid-cols-2">
+                  {personalityTypes.zodiac.map((sign, index) => (
+                    <SelectionButton
+                      key={index}
+                      size="lg"
+                      type="button"
+                      variant={
+                        form.getValues("zodiac") === sign
+                          ? "fixedDefault"
+                          : "fixedSecondary"
+                      }
+                      onClick={() =>
+                        form.setValue("zodiac", sign as Input["zodiac"])
+                      }
+                    >
+                      {sign}
+                    </SelectionButton>
+                  ))}
+                </div>
                 <FormMessage />
               </FormItem>
 
