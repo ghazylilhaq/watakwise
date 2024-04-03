@@ -25,12 +25,9 @@ import { personalitySchema } from "@/schemas/form/personality";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectionButton from "./SelectionButton";
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { get } from "http";
 import { useRouter } from "next/navigation";
-
-type Props = {};
 
 const personalityTypes = {
   mbti: [
@@ -67,17 +64,55 @@ const personalityTypes = {
   ],
 };
 
+type Props = {
+  userId: string;
+};
+
 type Input = z.infer<typeof personalitySchema>;
 
-const SelectPersonalityForm = (props: Props) => {
+const SelectPersonalityForm = ({ userId }: Props) => {
   const router = useRouter();
 
-  const { mutate: getContent, isPending } = useMutation({
-    mutationFn: async ({ personality }: Input) => {
-      const response = await axios.post("/api/personality", { personality });
+  const { mutate: getPersonality, isPending: isPendingPersonality } =
+    useMutation({
+      mutationFn: async ({ personality }: Input) => {
+        const response = await axios.post("/api/personality", { personality });
+        return response.data;
+      },
+    });
+
+  const { mutate: getContent, isPending: isPendingContent } = useMutation({
+    mutationFn: async ({ contentType }: { contentType: string }) => {
+      const response = await axios.post("/api/content", { contentType });
       return response.data;
     },
   });
+
+  const onSubmit = async (input: Input) => {
+    if (input.mbti && input.zodiac) {
+      input.personality = [input.mbti, input.zodiac];
+
+      getPersonality(
+        {
+          personality: input.personality,
+          mbti: input.mbti,
+          zodiac: input.zodiac,
+        },
+        {
+          onSuccess: ({ user }) => {
+            getContent(
+              {
+                contentType: "summary",
+              },
+              {
+                onSuccess: ({ user }) => router.push(`/profile/${userId}`),
+              }
+            );
+          },
+        }
+      );
+    }
+  };
 
   const form = useForm<Input>({
     resolver: zodResolver(personalitySchema),
@@ -86,24 +121,6 @@ const SelectPersonalityForm = (props: Props) => {
       zodiac: "Cancer",
     },
   });
-
-  const onSubmit = async (input: Input) => {
-    if (input.mbti && input.zodiac) {
-      input.personality = [input.mbti, input.zodiac];
-
-      getContent(
-        {
-          personality: input.personality,
-          mbti: input.mbti,
-          zodiac: input.zodiac,
-        },
-        {
-          onSuccess: ({ content }) =>
-            router.push(`/content/summary/${content.id}`),
-        }
-      );
-    }
-  };
 
   form.watch();
 
@@ -166,7 +183,10 @@ const SelectPersonalityForm = (props: Props) => {
                 <FormMessage />
               </FormItem>
 
-              <Button disabled={isPending} type="submit">
+              <Button
+                disabled={isPendingPersonality || isPendingContent}
+                type="submit"
+              >
                 Submit
               </Button>
             </form>
