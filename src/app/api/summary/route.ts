@@ -10,16 +10,6 @@ export const maxDuration = 500;
 
 export async function POST(req: Request, res: Response) {
   try {
-    const session = await getAuthSession();
-    // if (!session?.user) {
-    //   return NextResponse.json(
-    //     { error: "You must be logged in to create a content." },
-    //     {
-    //       status: 401,
-    //     }
-    //   );
-    // }
-
     const body = await req.json();
     const { personality = [] } = personalitySchema.parse(body);
     let summary: any;
@@ -38,7 +28,7 @@ export async function POST(req: Request, res: Response) {
 
     return NextResponse.json(
       {
-        summary: summary,
+        content: summary, 
       },
       {
         status: 200,

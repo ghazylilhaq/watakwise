@@ -62,16 +62,18 @@ model PersonalityCategory {
 }
 
 model Personality {
-  id    String    @id @default(cuid())
-  name      String  @unique
-  description String?
-  category  PersonalityCategory @relation(fields: [categoryTitle], references: [title])
+  id            String            @id @default(cuid())
+  name          String            @unique
+  description   String?
+  image         String?
+  category      PersonalityCategory @relation(fields: [categoryTitle], references: [title])
   categoryTitle String
-  Users User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime?
+  users         User[]            // Define the many-to-many relationship
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime?
 
-  }
+
+}
 
 model ContentCategory {
   id    String    @id @default(cuid())
@@ -91,4 +93,5 @@ model Content {
   updatedAt DateTime?
   userId String
   user User @relation(fields: [userId], references: [id])
+  @@unique([userId, contentCategoryTitle])
 }

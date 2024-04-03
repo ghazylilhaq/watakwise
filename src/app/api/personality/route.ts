@@ -1,25 +1,23 @@
 import { getAuthSession } from "@/lib/nextauth";
 import { personalitySchema } from "@/schemas/form/personality";
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 import axios from "axios";
-
-const prisma = new PrismaClient();
 
 export const POST = async (req: Request, res: Response) => {
   try {
     const session = await getAuthSession();
 
-    // if (!session?.user) {
-    //   return NextResponse.json(
-    //     { error: "You must be logged in to get a summary of your profile" },
-    //     {
-    //       status: 401,
-    //     }
-    //   );
-    // }
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "You must be logged in to update your profile" },
+        {
+          status: 401,
+        }
+      );
+    }
 
     const body = await req.json();
     const { personality = [] } = personalitySchema.parse(body);
@@ -48,32 +46,20 @@ export const POST = async (req: Request, res: Response) => {
       );
     }
 
-    // Connect the matched personalities to the user in the database
+    // Update the user's personalities in the database
     const user = await prisma.user.update({
       where: { id: session?.user?.id },
       data: {
         personalities: {
-          connect: matchedPersonalities.map((p) => ({ id: p.id })),
+          set: matchedPersonalities.map((p) => ({ id: p.id })),
         },
       },
     });
 
-    const { data } = await axios.post(`${process.env.API_URL}/api/summary`, {
-      personality,
-    });
+    revalidatePath(`/profile/[userId]`, "page");
 
-    const content = await prisma.content.create({
-      data: {
-        title: data.summary.title,
-        description: data.summary.description,
-        contentCategoryTitle: "Summary",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        userId: session?.user?.id ?? "", // Add null check for session and provide default value
-      },
-    });
-
-    return NextResponse.json({ user: user, content: content }, { status: 200 });
+    // Return success response
+    return NextResponse.json({ user: user }, { status: 200 });
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
@@ -84,5 +70,38 @@ export const POST = async (req: Request, res: Response) => {
         { status: 500 }
       );
     }
+  }
+};
+
+export const GET = async (req: Request, res: Response) => {
+  try {
+    const session = await getAuthSession();
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "You must be logged in to get user data" },
+        {
+          status: 401,
+        }
+      );
+    }
+    const userPersonality = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        id: true,
+        name: true,
+        personalities: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return NextResponse.json({ user: userPersonality }, { status: 200 });
+  } catch (error) {
+    console.error("An unexpected error occurred:", error);
+    return NextResponse.json(
+      { error: "An unexpected error occurred." },
+      { status: 500 }
+    );
   }
 };
