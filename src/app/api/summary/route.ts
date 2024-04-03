@@ -12,9 +12,9 @@ export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
     const { personality = [] } = personalitySchema.parse(body);
-    let summary: any;
+    let content: any;
 
-    summary = await strict_output(
+    content = await strict_output(
       "You are a helpful AI that is able to generate a content that summarize combination of personality and create content out of it in bahasa indonesia. the content have a cathcy title that show the overall personality, a body content that explain the user persoality, store the content with title and body in a JSON array",
       `You are to generate an article that have the personnality combination of ${personality?.join(
         " and "
@@ -28,7 +28,7 @@ export async function POST(req: Request, res: Response) {
 
     return NextResponse.json(
       {
-        content: summary, 
+        content: content,
       },
       {
         status: 200,

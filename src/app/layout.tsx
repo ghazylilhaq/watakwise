@@ -18,11 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex justify-center p-24  ">
+      <body className="min-h-screen flex justify-center p-24 ">
         <Provide>
           {" "}
           <Navbar />
-          {children}
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"> {children}</div>
         </Provide>
       </body>
     </html>

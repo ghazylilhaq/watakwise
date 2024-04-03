@@ -18,11 +18,11 @@ const SummaryCard = ({ userId }: Props) => {
       }}
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-2xl font-bold">Who are you?</CardTitle>
+        <CardTitle className="text-2xl font-bold">Siapakah dirimu?</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          see what you are base on your personalities
+          lihat ringkasan kepribadianmu dan ketahui dirimu lebih dalam
         </p>
       </CardContent>
     </Card>

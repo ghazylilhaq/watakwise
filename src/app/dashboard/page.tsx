@@ -28,7 +28,7 @@ const DashboardPage = async (props: Props) => {
         <h2 className="mr-2 text-3xl font-bold tracking-tight">Dashboard</h2>
       </div>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-1">
-        {!userPersonality?.personalities ? (
+        {!userPersonality?.personalities[0] ? (
           <SelectPersonality />
         ) : (
           <SummaryCard userId={session?.user.id} />

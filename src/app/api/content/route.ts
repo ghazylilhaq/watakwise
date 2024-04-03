@@ -37,23 +37,60 @@ export const POST = async (req: Request, res: Response) => {
       }
     );
 
-    const summary = await prisma.content.updateMany({
+    const existingContent = await prisma.content.findFirst({
       where: {
         contentCategoryTitle: contentType,
         user: {
           id: session?.user?.id,
         },
       },
-      data: {
-        title: data.content.title,
-        description: data.content.description,
-        updatedAt: new Date(),
-      },
     });
 
-    revalidatePath("/content", "layout");
-
-    return NextResponse.json({ summary: summary }, { status: 200 });
+    if (!existingContent) {
+      const newContent = await prisma.content.create({
+        data: {
+          title: data.content.title,
+          description: data.content.description,
+          updatedAt: new Date(),
+          createdAt: new Date(),
+          contentCategory: {
+            connect: {
+              title: contentType,
+            },
+          },
+          user: {
+            connect: {
+              id: session?.user?.id,
+            },
+          },
+        },
+      });
+      revalidatePath("/content", "layout");
+      return NextResponse.json(
+        { content: newContent, message: "new content has been created" },
+        { status: 200 }
+      );
+    } else {
+      const newContent = await prisma.content.updateMany({
+        where: {
+          contentCategoryTitle: contentType,
+          user: {
+            id: session?.user?.id,
+          },
+        },
+        data: {
+          title: data.content.title,
+          description: data.content.description,
+          updatedAt: new Date(),
+        },
+      });
+      revalidatePath("/content", "layout");
+      return NextResponse.json(
+        { content: newContent, message: "new content has been created" },
+        { status: 200 }
+      );
+      // Do something with summary if needed
+    }
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

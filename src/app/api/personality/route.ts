@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import axios from "axios";
 
 export const POST = async (req: Request, res: Response) => {
   try {
@@ -57,6 +56,7 @@ export const POST = async (req: Request, res: Response) => {
     });
 
     revalidatePath(`/profile/[userId]`, "page");
+    revalidatePath(`/dashboard`, "page");
 
     // Return success response
     return NextResponse.json({ user: user }, { status: 200 });
@@ -96,6 +96,8 @@ export const GET = async (req: Request, res: Response) => {
         },
       },
     });
+
+    revalidatePath(`/profile/[userId]`, "page");
     return NextResponse.json({ user: userPersonality }, { status: 200 });
   } catch (error) {
     console.error("An unexpected error occurred:", error);

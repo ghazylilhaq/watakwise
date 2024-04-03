@@ -105,7 +105,7 @@ const SelectPersonalityForm = ({ userId }: Props) => {
                 contentType: "summary",
               },
               {
-                onSuccess: ({ user }) => router.push(`/profile/${userId}`),
+                onSuccess: ({ user }) => router.push(`/`),
               }
             );
           },
@@ -125,18 +125,22 @@ const SelectPersonalityForm = ({ userId }: Props) => {
   form.watch();
 
   return (
-    <div className="absolute -tranlate-x-1/2 -translate-y-1/2 top-1/2">
+    <div>
       <Card>
         <CardHeader>
-          <CardTitle className="font-bold text-2xl">Personality</CardTitle>
-          <CardDescription>Select my personality</CardDescription>
+          <CardTitle className="font-bold text-3xl">Kepribadianmu</CardTitle>
+          <CardDescription>
+            Pilih dengan menklik pilihan dibawah
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormItem>
-                <FormLabel className="text-xl font-bold">MBTI</FormLabel>
-                <FormDescription>Select your MBTI</FormDescription>
+                <div className="justify-center items-center flex  mb-4">
+                  <FormLabel className="text-2xl font-bold ">MBTI</FormLabel>
+                  {/* <FormDescription>Pilih MBTI MU</FormDescription> */}
+                </div>
                 <div className="justify-center items-center flex flex-wrap gap-4 mt-4  max-w-6xl md:grid-cols-2">
                   {personalityTypes.mbti.map((sign, index) => (
                     <SelectionButton
@@ -159,8 +163,10 @@ const SelectPersonalityForm = ({ userId }: Props) => {
                 <FormMessage />
               </FormItem>
               <FormItem>
-                <FormLabel className="text-xl font-bold">Zodiac</FormLabel>
-                <FormDescription>Select your Zodiac</FormDescription>
+                <div className="justify-center items-center flex mb-4">
+                  <FormLabel className="text-2xl font-bold ">Zodiac</FormLabel>
+                  {/* <FormDescription>Select your Zodiac</FormDescription> */}
+                </div>
                 <div className="justify-center items-center flex flex-wrap gap-4 mt-4  max-w-6xl md:grid-cols-2">
                   {personalityTypes.zodiac.map((sign, index) => (
                     <SelectionButton
@@ -183,12 +189,11 @@ const SelectPersonalityForm = ({ userId }: Props) => {
                 <FormMessage />
               </FormItem>
 
-              <Button
-                disabled={isPendingPersonality || isPendingContent}
-                type="submit"
-              >
-                Submit
-              </Button>
+              {isPendingPersonality || isPendingContent ? (
+                <p>Loading...</p>
+              ) : (
+                <Button type="submit">Submit</Button>
+              )}
             </form>
           </Form>
         </CardContent>

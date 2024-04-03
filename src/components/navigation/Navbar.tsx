@@ -40,7 +40,7 @@ const Navbar = async () => {
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <SignInButton text={"Sign In"} />{" "}
+            <SignInButton  text={"Sign In"} />{" "}
           </div>
         )}
       </div>

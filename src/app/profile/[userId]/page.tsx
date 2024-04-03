@@ -47,40 +47,52 @@ const ProfilePage = async ({ params: { userId } }: Props) => {
 
   return (
     <main className="p-8 mx-auto max-w-7xl">
-      <div className="flex items-center">
-        <h2 className="mr-2 text-3xl font-bold tracking-tight">
-          Your Personality
-        </h2>
-      </div>
-
-      <div
-        className={`grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-${userPersonality?.personalities.length}`}
-      >
-        {userPersonality?.personalities.map((personality) => (
-          <Card key={personality.id}>
-            <CardHeader>
-              <CardTitle className=" font-semibold">
-                {personality.category.title.toUpperCase()}
-              </CardTitle>
-              {/* <CardDescription>
+      {!userPersonality?.personalities[0] ? (
+        <div className=" flex-col items-center justify-center align-middle ">
+          <h2 className="mr-2 text-3xl font-bold tracking-tight">
+            Kamu belum pilih kepribadian
+          </h2>
+          <Button variant="link">
+            <Link href="/selection">pilih kepribadianmu disini</Link>
+          </Button>{" "}
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center">
+            <h2 className="mr-2 text-3xl font-bold tracking-tight">
+              Your Personality
+            </h2>
+          </div>
+          <div
+            className={`grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-${userPersonality?.personalities.length}`}
+          >
+            {userPersonality?.personalities.map((personality) => (
+              <Card key={personality.id}>
+                <CardHeader>
+                  <CardTitle className=" font-semibold">
+                    {personality.category.title.toUpperCase()}
+                  </CardTitle>
+                  {/* <CardDescription>
                 this is what your selection about your personality
               </CardDescription> */}
-            </CardHeader>
-            <CardContent>
-              <p>{personality.name}</p>
-              <Image
-                src={personality.image ?? ""}
-                alt={personality.name}
-                width={200}
-                height={200}
-              ></Image>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <Button variant="link">
-          <Link href="/selection">pilih kepribadian baru</Link>
-        </Button>
+                </CardHeader>
+                <CardContent>
+                  <p>{personality.name}</p>
+                  <Image
+                    src={personality.image ?? ""}
+                    alt={personality.name}
+                    width={200}
+                    height={200}
+                  ></Image>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <Button variant="link">
+            <Link href="/selection">pilih kepribadian baru</Link>
+          </Button>{" "}
+        </>
+      )}
     </main>
   );
 };

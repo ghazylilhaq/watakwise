@@ -17,12 +17,12 @@ const SelectPersonality = (props: Props) => {
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle className="text-2xl font-bold">
-          Select My Personality
+          Pilih kepribadianmu
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          Select your personality based on your test
+          pilih kepribadian yang kamu miliki
         </p>
       </CardContent>
     </Card>
