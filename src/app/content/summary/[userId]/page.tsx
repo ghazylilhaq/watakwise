@@ -16,10 +16,9 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   params: { userId: string };
-  className?: string;
 };
 
-const summaryPage = async ({ className, params: { userId } }: Props) => {
+const summaryPage = async ({ params: { userId } }: Props) => {
   const session = await getAuthSession();
   if (!session?.user) {
     redirect("/");
