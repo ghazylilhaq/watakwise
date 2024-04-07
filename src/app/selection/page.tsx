@@ -11,9 +11,11 @@ const SelectionPage = async (props: Props) => {
     redirect("/");
   }
 
-
-
-  return <SelectPersonalityForm userId={session.user.id} />;
+  return (
+    <section className="">
+      <SelectPersonalityForm userId={session?.user.id} />;
+    </section>
+  );
 };
 
 export default SelectionPage;

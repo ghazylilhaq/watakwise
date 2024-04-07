@@ -65,7 +65,7 @@ const personalityTypes = {
 };
 
 type Props = {
-  userId: string;
+  userId: string | undefined;
 };
 
 type Input = z.infer<typeof personalitySchema>;
@@ -125,80 +125,74 @@ const SelectPersonalityForm = ({ userId }: Props) => {
   form.watch();
 
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-bold text-3xl">Kepribadianmu</CardTitle>
-          <CardDescription>
-            Pilih dengan menklik pilihan dibawah
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormItem>
-                <div className="justify-center items-center flex  mb-4">
-                  <FormLabel className="text-2xl font-bold ">MBTI</FormLabel>
-                  {/* <FormDescription>Pilih MBTI MU</FormDescription> */}
-                </div>
-                <div className="justify-center items-center flex flex-wrap gap-4 mt-4  max-w-6xl md:grid-cols-2">
-                  {personalityTypes.mbti.map((sign, index) => (
-                    <SelectionButton
-                      key={index}
-                      size="lg"
-                      type="button"
-                      variant={
-                        form.getValues("mbti") === sign
-                          ? "fixedDefault"
-                          : "fixedSecondary"
-                      }
-                      onClick={() =>
-                        form.setValue("mbti", sign as Input["mbti"])
-                      }
-                    >
-                      {sign}
-                    </SelectionButton>
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-              <FormItem>
-                <div className="justify-center items-center flex mb-4">
-                  <FormLabel className="text-2xl font-bold ">Zodiac</FormLabel>
-                  {/* <FormDescription>Select your Zodiac</FormDescription> */}
-                </div>
-                <div className="justify-center items-center flex flex-wrap gap-4 mt-4  max-w-6xl md:grid-cols-2">
-                  {personalityTypes.zodiac.map((sign, index) => (
-                    <SelectionButton
-                      key={index}
-                      size="lg"
-                      type="button"
-                      variant={
-                        form.getValues("zodiac") === sign
-                          ? "fixedDefault"
-                          : "fixedSecondary"
-                      }
-                      onClick={() =>
-                        form.setValue("zodiac", sign as Input["zodiac"])
-                      }
-                    >
-                      {sign}
-                    </SelectionButton>
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
+    <Card>
+      <CardHeader>
+        <CardTitle className="font-bold text-3xl">Kepribadianmu</CardTitle>
+        <CardDescription>Pilih dengan menklik pilihan dibawah</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-2xl font-bold block">MBTI</FormLabel>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                {personalityTypes.mbti.map((sign, index) => (
+                  <SelectionButton
+                    key={index}
+                    size="lg"
+                    type="button"
+                    variant={
+                      form.getValues("mbti") === sign
+                        ? "fixedDefault"
+                        : "fixedSecondary"
+                    }
+                    onClick={() => form.setValue("mbti", sign as Input["mbti"])}
+                  >
+                    {sign}
+                  </SelectionButton>
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-2xl font-bold block">
+                  Zodiac
+                </FormLabel>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                {personalityTypes.zodiac.map((sign, index) => (
+                  <SelectionButton
+                    key={index}
+                    size="lg"
+                    type="button"
+                    variant={
+                      form.getValues("zodiac") === sign
+                        ? "fixedDefault"
+                        : "fixedSecondary"
+                    }
+                    onClick={() =>
+                      form.setValue("zodiac", sign as Input["zodiac"])
+                    }
+                  >
+                    {sign}
+                  </SelectionButton>
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
 
-              {isPendingPersonality || isPendingContent ? (
-                <p>Loading...</p>
-              ) : (
-                <Button type="submit">Submit</Button>
-              )}
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+            {isPendingPersonality || isPendingContent ? (
+              <p>Loading...</p>
+            ) : (
+              <Button type="submit">Submit</Button>
+            )}
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

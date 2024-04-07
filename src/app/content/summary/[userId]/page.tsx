@@ -12,12 +12,14 @@ import {
 } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type Props = {
   params: { userId: string };
+  className?: string;
 };
 
-const summaryPage = async ({ params: { userId } }: Props) => {
+const summaryPage = async ({ className, params: { userId } }: Props) => {
   const session = await getAuthSession();
   if (!session?.user) {
     redirect("/");
@@ -56,22 +58,20 @@ const summaryPage = async ({ params: { userId } }: Props) => {
 
   return (
     <main className="p-8 mx-auto max-w-7xl">
-      <div className="flex items-center">
-        <h2 className="mr-2 text-3xl font-bold tracking-tight">
-          {content?.title}
-        </h2>
-      </div>
-
       <div className={`grid gap-4 mt-4 md:grid-cols-1 lg:grid-cols-1`}>
-        <Card>
+        <Card className="">
           <CardHeader>
-            <CardTitle className=" font-semibold">Summary</CardTitle>
+            <CardTitle className="mr-2 lg:text-3xl font-bold tracking-tight text-base">
+              {content?.title}
+            </CardTitle>
             {/* <CardDescription>
               this is what your selection about your personality
             </CardDescription> */}
           </CardHeader>
-          <CardContent>
-            <p className="text-lg ">{content?.description}</p>
+          <CardContent className="">
+            <p className="lg:text-lg md:text-base text-sm ">
+              {content?.description}
+            </p>
           </CardContent>
         </Card>
       </div>
