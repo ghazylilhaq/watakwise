@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "personality",
 };
 
-export default function ConentLayout({
+export default function ContentLayout({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;
