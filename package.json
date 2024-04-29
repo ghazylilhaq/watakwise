@@ -20,6 +20,7 @@
     "@radix-ui/react-radio-group": "^1.1.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^5.28.12",
+    "@vercel/speed-insights": "^1.0.10",
     "@xata.io/client": "^0.0.0-next.v34f1d64a4f4c1ffd896bbb285ab38efd8315b259",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
